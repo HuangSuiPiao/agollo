@@ -19,6 +19,7 @@ package agollo
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"os"
 	"sync"
@@ -60,6 +61,41 @@ func writeFile(content []byte, configPath string) {
 	}
 	defer file.Close()
 	file.Write(content)
+}
+
+func TestParamStart(t *testing.T) {
+	t.SkipNow()
+	server := runErrorResponse()
+	newAppConfig := getTestMaxwellConfig()
+	newAppConfig.IP = server.URL
+	notify.InitAllNotifications(nil)
+
+	InitCustomConfig(func() (*config.AppConfig, error) {
+		cc := getTestAppConfig()
+		cc.RequestParam = map[string]string{"sk": "true"}
+		return cc, nil
+	})
+	time.Sleep(1 * time.Second)
+
+	Start()
+
+	value := GetValue("gw-host-atop")
+	//Assert(t, "value1", Equal(value))
+	fmt.Println(value)
+	value2 := GetValue("gw-host-highway")
+	//Assert(t, "value2", Equal(value2))
+	fmt.Println(value2)
+
+	GetConfigCache("application").Range(func(key, value interface{}) bool {
+		fmt.Print(key)
+		fmt.Print(":")
+		fmt.Println(value)
+		return true
+	})
+	/*	for ; ; {
+		time.Sleep(1 * time.Second)
+		fmt.Println(GetValue("gw-host-highway"))
+	}*/
 }
 
 func TestStart(t *testing.T) {
@@ -132,6 +168,18 @@ func TestErrorStart(t *testing.T) {
 	value2 := GetValue("key2")
 	Assert(t, "value2", Equal(value2))
 
+}
+
+func getTestMaxwellConfig() *config.AppConfig {
+	jsonStr := `{
+    "appId": "maxwell",
+    "cluster": "default",
+    "namespaceName": "application",
+    "ip": "http://in-mousika-config.wgine-dev.com:8181",
+    "releaseKey": "1"
+	}`
+	c, _ := env.Unmarshal([]byte(jsonStr))
+	return c.(*config.AppConfig)
 }
 
 func getTestAppConfig() *config.AppConfig {

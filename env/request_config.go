@@ -33,4 +33,6 @@ type ConnectConfig struct {
 	AppID string
 	//密钥
 	Secret string
+	//请求参数,拼接在请求后
+	RequestParam map[string]string
 }

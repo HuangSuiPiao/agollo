@@ -328,9 +328,10 @@ func autoSyncNamespaceConfigServices(newAppConfig *config.AppConfig, allNotifica
 		urlSuffix := component.GetConfigURLSuffix(appConfig, namespace)
 
 		_, err = http.RequestRecovery(appConfig, &env.ConnectConfig{
-			URI:    urlSuffix,
-			AppID:  appConfig.AppID,
-			Secret: appConfig.Secret,
+			URI:          urlSuffix,
+			AppID:        appConfig.AppID,
+			Secret:       appConfig.Secret,
+			RequestParam: appConfig.RequestParam,
 		}, &http.CallBack{
 			SuccessCallBack:   AutoSyncConfigServicesSuccessCallBack,
 			NotModifyCallBack: touchApolloConfigCache,

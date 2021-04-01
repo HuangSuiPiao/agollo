@@ -39,6 +39,7 @@ type AppConfig struct {
 	IsBackupConfig   bool   `default:"true" json:"isBackupConfig"`
 	BackupConfigPath string `json:"backupConfigPath"`
 	Secret           string `json:"secret"`
+	RequestParam     map[string]string
 }
 
 //ServerInfo 服务器信息

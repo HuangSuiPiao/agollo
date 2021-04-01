@@ -177,6 +177,11 @@ func RequestRecovery(appConfig *config.AppConfig,
 		}
 
 		requestURL := fmt.Sprintf(format, host, connectConfig.URI)
+		if connectConfig.RequestParam != nil {
+			for k, v := range appConfig.RequestParam {
+				requestURL = requestURL + "&" + (k + "=" + v)
+			}
+		}
 		response, err = Request(requestURL, connectConfig, callBack)
 		if err == nil {
 			return response, err
